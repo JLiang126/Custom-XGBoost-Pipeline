@@ -17,7 +17,7 @@ CONTAINER = "xgboost"
 
 print("=== Loading XGBoost ===")
 try: import my_xgboost # type: ignore
-except ImportError: print("Error loading XGBoost cannoy find the module")
+except ImportError: print("Error loading XGBoost cannot find the module")
 print("    Loaded XGBoost\n")
 
 print("=== Loading Dataset ===")
@@ -25,6 +25,7 @@ features, labels = load_breast_cancer(return_X_y=True)
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.2, random_state=7)
 print(f"    Dataset loaded. Training shape: {features_train.shape}, Test shape: {features_test.shape}\n")
 
+# Saving loading data set to .csv as the booster I made can only read csv files
 def save_to_csv(X_data, y_data, output_path):
     with open(output_path, mode='w', newline='') as f:
         writer = csv.writer(f)
@@ -57,7 +58,7 @@ def main():
         model = my_xgboost.XGBoost(**params)
         model.train(data, target)
         
-        test_data = pd.read_csv(TEST_CSV_PATH)
+        test_data = pd.read_csv(TEST_CSV_PATH, header=None)
         features = test_data.iloc[:, :-1].values
         labels = test_data.iloc[:, -1].values
         
