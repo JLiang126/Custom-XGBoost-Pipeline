@@ -11,13 +11,12 @@ from azure.storage.blob import BlobServiceClient
 TRAIN_CSV_PATH = "train_data.csv"
 TEST_CSV_PATH = "test_data.csv"
 
-MLFLOW_TRACKING_URI = "http://mlflow-server.default.svc.cluster.local:1234"
+MLFLOW_TRACKING_URI = "http://host.docker.internal:1234"
 AZURE_CONNECTION_STRING = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 CONTAINER = "xgboost"
 
 print("=== Loading XGBoost ===")
-try: import my_xgboost # type: ignore
-except ImportError: print("Error loading XGBoost cannot find the module")
+import my_xgboost # type: ignore
 print("    Loaded XGBoost\n")
 
 print("=== Loading Dataset ===")
@@ -40,18 +39,17 @@ save_to_csv(features_train, labels_train, TRAIN_CSV_PATH)
 save_to_csv(features_test, labels_test, TEST_CSV_PATH)
 
 def main():
-
     print("=== Init MLFlow ===")
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment("cpp-xgboost-on-k8s-cluster")
 
     with mlflow.start_run():
-        params = {"num_trees": 100, "LR": 0.05, "max_depth": 2, "lambda": 0,"gamma": 0, "loss": my_xgboost.LogLoss()}
+        params = {"num_trees": 10, "learning_rate": 0.05, "max_depth": 2, "lambda_reg": 0,"gamma": 0, "min_cover": 15.0, "objective": my_xgboost.LogLoss()}
         mlflow_params = params.copy()
         mlflow_params["loss"] = "LogLoss"
         mlflow.log_params(mlflow_params);
-        print("    Parameters Logged")
-        
+        print("    Parameters Logged\n")
+
         print("=== Boosting ===")
         data = my_xgboost.DataMatrix(TRAIN_CSV_PATH)
         target = data.get_labels()
@@ -63,10 +61,10 @@ def main():
         labels = test_data.iloc[:, -1].values
         
         predictions = [1 if model.predict(list(row)) > 0.0 else 0 for row in features]
-        print(f"    Accuracy: {accuracy_score(labels, predictions)} | Recall: {recall_score(labels, predictions)} | F1: {f1_score(labels, predictions)}")
+        print(f"    Accuracy: {accuracy_score(labels, predictions)} | Recall: {recall_score(labels, predictions)} | F1: {f1_score(labels, predictions)}\n")
 
-        os.makedirs("models", exist_ok=True)
-        weights = "models/test.txt"
+        os.makedirs("../models", exist_ok=True)
+        weights = "../models/test.txt"
         model.save_model(weights)
 
         print("=== Saving to Azure ===")
@@ -87,7 +85,7 @@ def main():
             except Exception as e:
                 print(f"Upload to Azure Blob Storage failed: {e}")
         else:
-            print("Cannot access 'AZURE_STORAGE_CONNECTION_STRING' environment variable")
+            print(" Cannot access 'AZURE_STORAGE_CONNECTION_STRING' environment variable")
 
 if __name__ == "__main__":
     main()

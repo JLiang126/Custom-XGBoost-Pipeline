@@ -52,3 +52,13 @@ The system is designed around the concept of decoupling the management layer fro
 ├── CMakeLists.txt         # C++ Build configuration
 ├── requirements.txt       # Python dependencies
 └── README.md
+
+--- 
+MLFlow init
+```
+mlflow server \
+  --backend-store-uri sqlite:////Users/jasonliang/Dev/AIML/mlflow/mlflow.db \
+  --default-artifact-root /Users/jasonliang/Dev/AIML/mlflow/artifacts/ \
+  --host 0.0.0.0 \
+  --port 1234
+```

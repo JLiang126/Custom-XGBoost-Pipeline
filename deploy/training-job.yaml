@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cpp-xgboost-training-job
+  namespace: default
+
+spec: # How should the job behave
+  template: # Creates a pod
+    spec: # What hard/software in the pod
+      containers:
+      - name: xgboost-trainer
+        # Matches the image name
+        image: xgboost-local-test:latest
+        imagePullPolicy: Never
+        
+        # Injecting your environment secrets safely at runtime
+        env:
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "azure_secret_string"
+          
+      # Never restart if the code crashes
+      restartPolicy: Never
+      
+  # 0 retries on failure 
+  backoffLimit: 0

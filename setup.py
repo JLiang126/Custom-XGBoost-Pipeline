@@ -3,8 +3,12 @@ import pybind11
 
 # Set up files
 source_files = [
-    "python-packages/bindings.cpp", 
-    "src/engine/XGBoost.cpp" 
+    "python-packages/bindings.cpp",
+    "src/dataloader/DataMatrix.cpp",
+    "src/engine/XGBoost.cpp",
+    "src/objective/Loss.cpp",
+    "src/XGTree/XGTree.cpp",
+    "src/XGTree/XGNode.cpp",
 ]
 
 ext_modules = [
