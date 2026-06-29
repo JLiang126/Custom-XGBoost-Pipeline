@@ -52,13 +52,41 @@ The system is designed around the concept of decoupling the management layer fro
 ├── CMakeLists.txt         # C++ Build configuration
 ├── requirements.txt       # Python dependencies
 └── README.md
+```
 
 --- 
+
+## Using Multipass
+
 MLFlow init
 ```
 mlflow server \
   --backend-store-uri sqlite:////Users/jasonliang/Dev/AIML/mlflow/mlflow.db \
   --default-artifact-root /Users/jasonliang/Dev/AIML/mlflow/artifacts/ \
   --host 0.0.0.0 \
-  --port 1234
+  --port 1234 \
+  --serve-artifacts
+```
+
+Launch VM
+```
+multipass launch --name k8s-single-node --cpus 4 --memory 6G --disk 40G --cloud-init microk8s-node.yaml 24.04
+multipass exec k8s-single-node -- cloud-init status --wait
+```
+
+Transfer and Load Engine 
+``` 
+multipass transfer xgboost-local-test.tar k8s-single-node:/home/ubuntu/ # Copy the tarball from your Mac to the VM
+multipass exec k8s-single-node -- sudo /snap/bin/microk8s ctr images import /home/ubuntu/xgboost-local-test.tar # Import the image into the MicroK8s container runtime
+```
+
+Mount Workspace and Run Job
+```
+multipass mount $(pwd) k8s-single-node:/workspace # Mount your current project directory to /workspace inside the VM
+multipass exec k8s-single-node -- /snap/bin/microk8s kubectl apply -f /workspace/deploy/training-job.yaml # Command Kubernetes to execute your training job
+```
+
+Monitor Pipeline
+``` 
+multipass exec k8s-single-node -- /snap/bin/microk8s kubectl logs -f job/cpp-xgboost-training-job
 ```

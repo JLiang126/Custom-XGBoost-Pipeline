@@ -61,11 +61,20 @@ def main():
         labels = test_data.iloc[:, -1].values
         
         predictions = [1 if model.predict(list(row)) > 0.0 else 0 for row in features]
-        print(f"    Accuracy: {accuracy_score(labels, predictions)} | Recall: {recall_score(labels, predictions)} | F1: {f1_score(labels, predictions)}\n")
+        accuracy = accuracy_score(labels, predictions)
+        recall = recall_score(labels, predictions)
+        f1 = f1_score(labels, predictions)
+        print(f"    Accuracy: {accuracy} | Recall: {recall} | F1: {f1}\n")
+        mlflow.log_metrics({
+            "accuracy": accuracy,
+            "recall": recall,
+            "f1_score": f1
+        })
 
         os.makedirs("../models", exist_ok=True)
         weights = "../models/test.txt"
         model.save_model(weights)
+        mlflow.log_artifact(weights, artifact_path="model_weights")
 
         print("=== Saving to Azure ===")
         if AZURE_CONNECTION_STRING:
