@@ -1,12 +1,12 @@
 # cloud-config
 package_update: true
 
-# 1. Install MicroK8s automatically via snap
+# Install MicroK8s automatically via snap
 snap:
   commands:
     - snap install microk8s --classic --channel=1.30/stable
 
-# 2. Run the user configuration and add-on commands on boot
+# Run the user configuration and add-on commands
 runcmd:
   - usermod -a -G microk8s ubuntu
   - mkdir -p /home/ubuntu/.kube
