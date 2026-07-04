@@ -18,6 +18,10 @@ spec: # How should the job behave
         - name: AZURE_STORAGE_CONNECTION_STRING
           value: "azure_secret_string"
           
+        envFrom:
+        - configMapRef:
+            name: xgboost-env-config
+          
       # Never restart if the code crashes
       restartPolicy: Never
       

@@ -2,7 +2,6 @@ import os
 import mlflow
 import csv
 import pandas as pd
-import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, recall_score, f1_score
@@ -11,7 +10,7 @@ from azure.storage.blob import BlobServiceClient
 TRAIN_CSV_PATH = "train_data.csv"
 TEST_CSV_PATH = "test_data.csv"
 
-MLFLOW_TRACKING_URI = "http://host.docker.internal:1234"
+MLFLOW_TRACKING_URI = os.environ.get("MLFLOW_TRACKING_URI")
 AZURE_CONNECTION_STRING = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 CONTAINER = "xgboost"
 

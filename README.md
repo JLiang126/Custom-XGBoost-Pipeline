@@ -70,12 +70,13 @@ mlflow server \
 
 Launch VM
 ```
-multipass launch --name k8s-single-node --cpus 4 --memory 6G --disk 40G --cloud-init microk8s-node.yaml 24.04
+multipass launch --name k8s-single-node --cpus 4 --memory 4G --disk 20G --cloud-init microk8s-node.yaml 24.04
 multipass exec k8s-single-node -- cloud-init status --wait
 ```
 
 Transfer and Load Engine 
 ``` 
+docker save xgboost-local-test > xgboost-local-test.tar
 multipass transfer xgboost-local-test.tar k8s-single-node:/home/ubuntu/ # Copy the tarball from your Mac to the VM
 multipass exec k8s-single-node -- sudo /snap/bin/microk8s ctr images import /home/ubuntu/xgboost-local-test.tar # Import the image into the MicroK8s container runtime
 ```
