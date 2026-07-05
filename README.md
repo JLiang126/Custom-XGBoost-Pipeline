@@ -1,6 +1,6 @@
-# Charmed-XGBoost: High-Performance C++ MLOps on MicroK8s
+# Custom-XGBoost-Pipeline: High-Performance C++ MLOps on MicroK8s
 
-**Charmed-XGBoost** is a cloud-native MLOps pipeline designed to demonstrate the bridge between high-performance "bare-metal" engineering and modern Kubernetes orchestration. This project takes a custom-built XGBoost engine (written in **C++** with **pybind11** wrappers) and deploys it as a scalable, tracked, and containerized workload on **Canonical MicroK8s**.
+**Custom-XGBoost-Pipeline** is a cloud-native MLOps pipeline designed to demonstrate the bridge between high-performance "bare-metal" engineering and modern Kubernetes orchestration. This project takes a custom-built XGBoost engine (written in **C++** with **pybind11** wrappers) and deploys it as a scalable, tracked, and containerized workload on **Canonical MicroK8s**.
 
 ---
 
@@ -9,7 +9,7 @@
 The primary objective of this repository is to showcase a "Day 2 Operations" mindset for machine learning—moving beyond local notebooks into a production-grade environment.
 
 *   **Hybrid Language Engineering:** Containerizing a C++/Python application using **multi-stage Docker builds**. This ensures a small, secure production image by separating the build-time compilers (gcc/cmake) from the runtime environment.
-*   **Cloud-Native Orchestration:** Deploying and managing ML workloads on **MicroK8s** utilizing **Juju-inspired** operational patterns.
+*   **Cloud-Native Orchestration:** Deploying and managing ML workloads on **MicroK8s** 
 *   **Automated Experiment Tracking:** Integrating **MLflow** within the Kubernetes cluster to log hyperparameters, metrics, and performance data automatically via internal cluster networking.
 *   **Hybrid Cloud Storage:** Bridging private infrastructure (K8s) with public cloud (Azure) by implementing **Azure Blob Storage** as a remote artifact repository for model weights.
 *   **Infrastructure as Code (IaC):** Moving from imperative manual setup to declarative YAML-based deployments, utilizing **Kubernetes Secrets** for secure Azure credential management.
